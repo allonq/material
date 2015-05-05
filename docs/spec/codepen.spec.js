@@ -120,36 +120,38 @@ describe('CodepenDataAdapter', function() {
 
     describe('when the module definition in the js file is formatted in different ways', function() {
 
-      it('handles arguments on new lines', function() {
-        var script = "angular.module(\
-'test', \
+      it('handles second argument on a new line', function() {
+        var script = "angular.module('test',\n \
 []);";
-        expectScriptIsReplacedWithCodepenModule(script);
-      });
-
-      it('handles dependencies on new lines', function() {
-        var script = "angular.module('test', [\
-'Dep1',\
-'Dep2',\
-]);";
-        expectScriptIsReplacedWithCodepenModule(script);
-      });
-
-      it('handles module on a new line', function() {
-        var script = "angular\
-.module('test', [\
-'Dep1',\
-'Dep2',\
-]);";
-        expectScriptIsReplacedWithCodepenModule(script);
-      });
-
-      function expectScriptIsReplacedWithCodepenModule(script) {
         demo.files.js = [{ contents: script }];
 
         data = $codepenDataAdapter.translate(demo, externalScripts);
         expect(data.js).toBe("angular.module('MyApp');");
-      };
+      });
+
+      it('handles dependencies on new lines', function() {
+        var script = "angular.module('test', [\n \
+'Dep1',\n \
+'Dep2',\n \
+]);";
+        demo.files.js = [{ contents: script }];
+
+        data = $codepenDataAdapter.translate(demo, externalScripts);
+        expect(data.js).toBe("angular.module('MyApp');");
+      });
+
+      it('handles module on a new line', function() {
+        var script = "angular\n\
+.module('test', [\n \
+'Dep1',\n \
+'Dep2',\n \
+]);";
+        demo.files.js = [{ contents: script }];
+
+        data = $codepenDataAdapter.translate(demo, externalScripts);
+        expect(data.js).toBe("angular\n\
+.module('MyApp');");
+      });
     });
   });
 });
